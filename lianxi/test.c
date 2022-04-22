@@ -1,101 +1,117 @@
 #include<stdio.h>
 //int main()
 //{
-//	int a[4] = { 1,2,3,4 };
-//	int* ptr1 = (int*)(&a + 1);
-//	int* ptr2 = (int*)((int)a + 1);
-//	printf("%x,%x", ptr1[-1], *ptr2); //ptr1[-1]==*(ptr1+(-1))==*(ptr1-1)
-//	return 0;               //想内存布局  小端存储方式 01 00 00 00 02 00 00 00 03 00 00 00 04 00 00 00     
-//}                                                   //*ptr2     从这开始小端模式访问  即（00 00 00 02） %x打印即200000                                    
-//int main()
-//{
-//	int a[3][2] = {(0,1),(2,3),(4,5)};
-//	int* p;    //初始化圆括号表达式 在数组布局中放最后一个数字即1，3，5 
-//	p = a[0];
-//	printf("%d", p[0]);//p[0]表示*(p+0)
+//	int a[5] = { 5,4,3,2,1 };
+//	int* ptr = (int*)(&a + 1);
+//	printf("%d ,%d", *(a + 1), *(ptr - 1));
 //	return 0;
 //}
 //int main()
 //{
-//	int a[5][5];
-//	int(*p)[4];
-//	p = a;//a的类型是int（*）[4]  
-//	//      p的类型是int（*）[5]   只是把a的地址赋值给p
-//	printf("%p,%d\n", &p[4][2] - &a[4][2], &p[4][2] - &a[4][2]);
-//	//              p[4][2]==*(*(p+4)+2)
-//	
+//	int aa[2][5] = { 10,9,8,7,6,5,4,3,2,1 };
+//	int* ptr1 = (int*)(&aa + 1);
+//	int* ptr2 = (int*)(*(aa + 1));
+//	//aa是个数组，aa+1 是第二行首元素地址，*（aa+1）==aa[1]表示5这个元素地址，再强制类型转换为int*
+//	printf("%d,%d", *(ptr1 - 1), *(ptr2 - 1));
 //	return 0;
 //
 //}
-//int main()
+
+
+//题目内容：
+//实现一个函数，可以左旋转字符串中的k个字符。
+//例如：
+//ABCD左旋转一个字符得到BCDA
+//ABCD钻旋转两个字符得到CDAB
+
+//旋转字符串
+// 
+//
+//暴力求解法
+#include<string.h>
+#include<assert.h>
+//void left_move(char* arr[],int k)
 //{
-//	int aa[2][5] = { 1,2,3,4,5,6,7,8,9,10 };
-//	int* ptr1 = (int*)(&aa + 1);
-//	int* ptr2 = (int*)(*(aa + 1));//二维数组首元素地址相当于第一行
-//	      aa=aa[1]        *（aa+1)==*(a[1])
-// printf("%d,%d\n", *(ptr1-1), *(ptr2-1));
-//	//ptr1是整形指针 ptr1-1移动一个整形
+//	assert(arr != NULL);
+//	int i = 0;
+//	int len = strlen(arr);
+//	for (i = 0; i < k; i++)
+//	{
+//		//左旋转一个字符
+//		// 1
+//		char tmp = *arr;
+//		//2
+//
+//		int j = 0;
+//		for (j = 0; j < len-1; j++)
+//		{
+//			*(arr + j) = *(arr + j + 1);
+//		}
+//		//3
+//		*(arr + len - 1) = tmp;
+//	}
+//}
+//三步翻转法
+// abcdef
+//分开 ab cdef
+//再各自翻转 ba fedc
+//合起来 bafedc
+//再翻转 cdefab
+//void reverse(char* left, char* right)
+//{
+//	assert(left != NULL);
+//	assert(right != NULL);
+//	while (left<right)
+//	{
+//		char tmp = *left;
+//		*left = *right;
+//		*right = tmp;
+//		left++;
+//		right--;
+//	}
+//}
+//void left_move(char*arr,int k)
+//{  
+//	//k表示传过来逆序几位
+//	int len = strlen;
+//	assert(arr);
+//	assert(k <= len);
+//	reverse(arr,arr+k-1);//逆序左边   reverse是一个逆序函数
+//	reverse(arr+k,arr+len-1);//逆序右边
+//	reverse(arr,arr+len-1);//逆序整体
+//}
+//int main()
+//{ 
+//	char arr[] = "abcdef";
+//	left_move(arr, 2);
+//	printf("%s\n", arr);
 //	return 0;
 //}
-//int main()
-//{
-//	char* a[] = { "work","at","alibaba" };
-//	char** pa = a;
-//	pa++;
-//	printf("%s\n", *pa);
-//	return 0; 
-//}
+//
+int left_move(char* s1, char* s2)
+{
+	int len = strlen(s1);
+	int i = 0;
+	for (i = 0; i < len; i++)
+	{
+		left_move(s1, 1);
+		int ret=strcmp(s1, s2);
+		if (ret == 0)
+			return;
+	}
+	return 0;
+}
 int main()
 {
-	char* c[] = { "ENTER","NEW","POINT","FIRST" };
-	char** cp[] = { c + 3,c + 2,c + 1,c };
-	char*** cpp = cp;
-	printf("%s\n", **++cpp);//++cpp指向c+2，*++cpp解引用拿到c+2内容即，c+2内容即是p的地址，
-	//                       **++cpp拿到p的地址，再进行打印 
-	printf("%s\n", *--* ++cpp + 3);//++级别高 ++cpp指向c+1  *++cpp解引用拿到c+1内容
-	//                              -- *++cpp   --即c+1变为c，而c指向数组c,即E的地址，+3即从E往后数3个数指向E  打印ER
-	printf("%s\n", *cpp[-2] + 3);//*cpp[-2]+3       ST
-	//                              **(cpp+(-2))+3
-	 //                              **(cpp-2)+3 
-	printf("%s\n", cpp[-1][-1] + 1);//cpp[-1][-1]+1
-	                             //*(  *(cpp-1)-1    )+1
-	 //            cpp指向c+3            cpp-1 指向c+2  ，c+2指向c中char*[2],
-	//                                   *(cpp-1)-1   指向char*[2]内容NEW首元素N地址
-	//                                     *（*（cpp-1）-1)+1  即指向NEW中的E  打印即是EW
-	//
-	///
-	//
-	//
-	//
-	//
-	//
-	//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	char* arr1 = "abcdef";
+	char* arr2 = "cdefad";
+	int ret = left_move(arr1, arr2);
+	if (ret == 1)
+		printf("yes\n");
+	else
+		printf("NO\n");
+	return 0;
 }
-
-
-
 
 
 
