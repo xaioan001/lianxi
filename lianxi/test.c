@@ -1,95 +1,93 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
 #include<string.h>
-//int is_left_move(char* str1, char* str2)
+#include<assert.h>
+//求字符串长度
+//strlen
+//计数器方法
+//递归
+//指针减指针
+//size_t==unsigned int 
+// size_t不会返回负数  int会返回负数
+//strlen 返回类型是size_t
+//
+//int my_strlen(const char* str)
 //{
-//	//1.在str1后边追加一个str1字符串
-//	//strcat   自己给自己追加时候不能用strcat函数
-//	// strncat
-//	int len1 = strlen(str1);
-//	int len2 = strlen(str2);
-//	strncat(str1,str1,6);//abcdefabcdef
-//	if (len1 != len2)
-//		return 0;
-//	//strstr函数时一个找子串
-//	//2.判断str2指向的字符串是否时str1指向的字符串的子串
-//	char*ret=strstr(str1, str2);//在str1中找str2子串
-//	if (ret == NULL)
+//	int count = 0;
+//	assert(str != NULL);
+//	while (*str != '\0')
 //	{
-//		return 0;
+//		count++;
+//		str++;
 //	}
-//	else
-//	{
-//		return 1;
-//	}
+//	return count;
 //}
 //int main()
 //{
-//	char arr1[30] = "abcdef";
-//	char arr2[] = "cdefab";
-//    int ret=is_left_move(arr1, arr2);
-//	if (ret == 1)
-//	{
-//		printf("yes\n");
-//	}
-//	else
-//	{
-//		printf("No\n");
-//	}
-//	return 0;
+//	int len = strlen("ancdef");
+//	////错误示范
+//	//char arr[] = { 'a','b','c','d','e','f' };
+// 	//int len = strlen(arr);
+//	printf("%d\n", len);
 //}
+//strcpy  字符串拷贝
+//char* my_strcpy(char* dest, char* src)
+//{
+//	assert(dest != NULL && src != NULL);
+//	char* ret = dest;
+//	//拷贝src指向字符串到dest指向的空间，包含'\0'
+//	while (*dest++ = *src++)
+//	{
+//		;
+//		//*dest++= *src++;
+//		//拷贝bit
+//	}
+//	//返回目的空间的起始地址
+//	return ret;
+//	//*dest = *src;//拷贝'\0'
 //
-///杨氏矩阵
-//题目内容
-// 有一个数字矩阵，矩阵的每一行从左到右是递增的，矩阵从上到下是递增的
-// 要求复杂度小于O（n）
-//1 2 3
-//2 3 4
-//3 4 5 
+//}
+//int main()
+//{
+//	char arr1[] = "abcdef";
+//	char arr2[] = "bit";
+//	//错误示范
+//	//char arr[] = { 'b','i','t' };没有\0位置
+//	my_strcpy(arr1, arr2);
+//	printf("%s\n", arr1);
+//	return 0;
 //
-int FindNum(int arr[3][3], int k, int*px, int*py)
-{
-	int x = 0;
-	int y = *py - 1;
-	while (x <=*px - 1 && y >= 0)
-	{
-		if (arr[x][y] > k)//右上角元素比较
-		{
-			y--;
-		}
-		else if (arr[x][y] < k)
-		{
-			x++;
-		}
-		else
-		{
-			*px = x;
-			*py = y;
-			return 1;
-		}
+//}
 
+
+
+//strcat字符串追加
+char* my_strcat(char*dest,const char*src)
+{              //目的地     源头
+	
+	char* ret = dest;
+	assert(dest != NULL);
+	assert(src);
+	//找到目的字符串'\0'
+	while (*dest != '\0')
+	{
+		dest++;
 	}
-	//找不到
-	return 0;
+	//追加
+	while (*dest++ = *src++)
+	{
+		;
+	}
+	return ret;
 }
 int main()
 {
-	int arr[3][3] = { {1,2,3},{4,5,6},{7,8,9} };
-	int k = 7;
-	int x = 3;
-	int y = 3;
-	//返回型参数
-	int ret = FindNum(arr, k, &x, &y);
-	if (ret == 1)
-	{
-		printf("找到了\n");
-	}
-	else
-	{
-		printf("找不到\n");
-	}
-	return 0;
+	char arr1[30] = "hello";
+	char arr2[] = "world";
+	my_strcat(arr1, arr2);//源头 arr2拷贝到目的地arr1
+	printf("%s\n", arr1);
 }
+
 
 
 
