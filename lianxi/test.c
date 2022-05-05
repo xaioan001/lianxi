@@ -96,28 +96,125 @@
 //	printf("%lf\n", s.st.weight);
 //	return 0;
 //}
-//结构体内存对齐
-struct S1
+// 
+// 
+// 
+////结构体内存对齐
+//struct S1
+//{
+//	int b;
+//	int a;
+//	char c1;
+//	char c2;
+//};
+///*考点如何计算？首先得掌握结构体的对齐规则
+//1.第一个成员在与结构体变量偏移量为0的地址处
+//2其他成员变量要对齐到某个数字
+//（对齐数）的整数倍的地址处
+//对齐数＝编译器默认的一个对齐数与该成员大小的较小值
+//·VS中默以的值为8
+//3.结构体总大小为最大对齐数
+//（每个成员变量都有一个对齐数）的整数倍。
+//4.如果嵌套了结构体的情况，
+//嵌套的结构体对齐到自己的最大对齐数的整数倍处，
+//结构体的整体大小就是所有最大对齐数（含嵌套结构体的对齐数）的整数倍，
+//*/
+//struct S2
+//{
+//	double e;
+//	char c1;
+//	char c2;
+//	/*int a;
+//	float c;*/
+//	
+//};
+//int main()
+//{
+//	struct S1 s1 = { 0 };
+//	printf("%d\n", sizeof(s1));
+//	struct S2 s2 = { 0 };
+//	printf("%d\n", sizeof(s2));
+//	return 0;
+//} 
+//struct S3
+//{
+//	double a;
+//	char b;
+//	int i;
+//};
+//struct S4
+//{
+//	char c1;
+//	struct S3 s3;
+//	double d;
+//};
+//int main()
+//{
+//	printf("%d\n", sizeof(struct S3 ));
+//	printf("%d\n", sizeof(struct S4));
+//	return 0;
+//}
+//总体来说
+//结构体的内存对齐是拿空间来换取时间的做法
+//默认对齐数设置
+////设置默认对齐数为4 
+//#pragma pack(4)
+//struct S
+//{
+//	char c1;
+//	double d;
+//};
+//#pragma pack()
+// //取消默认对齐数
+//int main()
+//{
+//	struct S  s;
+//	printf("%d\n", sizeof(s));
+//	return 0;
+//}
+//    #pragam 可以修改默认对齐数
+#include<stddef.h>
+//struct S
+//{
+//	char c;
+//	int i;
+//	double d;
+//};
+//int main()
+//{
+//	//offsetof();计算偏移量
+//	//offsetof();  是宏
+//	printf("%d\n", offsetof(struct S, c));
+//	printf("%d\n", offsetof(struct S, i));
+//	printf("%d\n", offsetof(struct S, d));
+//	return 0;
+//}
+
+
+
+//结构体传参
+struct S
 {
-	char c1;
 	int a;
-	char c2;
+	char c;
+	double d;
 };
-struct S2
+void Init(struct S*ps)
 {
-	char c1;
-	char c2;
-	int a;
-};
+	ps->a = 100;
+	ps->c = 'w';
+	ps->d = 3.14;
+}
 int main()
 {
-	struct S1 s1 = { 0 };
-	printf("%d\n", sizeof(s1));
-	struct S2 s2 = { 0 };
-	printf("%d\n", sizeof(s2));
+	struct S s = { 0 };
+	/*s.a = 100;
+	s.c = 'w';
+	s.d = 3.14;
+*/
+	Init(&s);
 	return 0;
 }
-
 
 
 
