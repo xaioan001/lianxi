@@ -1,115 +1,152 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+//当前我们知道的内存的使用方法：
+//1.创建一个变量
+//栈区：局部变量  函数的形式参数
+//堆区：动态内存分配
+//静态区：全局变量 静态变量
+//struct S
+//{
+//	char name[20];
+//	int age;
+//};
+//int main()
+//{
+//	struct S arr[50];//50个struct S 类型的数据
+//	//30人-浪费
+//	//60-不够
+//	return 0;
+//}
+//C语言是可以创建变长数组-c99中增加
+//动态内存分配在堆上
+//malloc free calloc realloc
+//malloc 开辟内存块
+#include<stdlib.h>
+#include<string.h>
+#include<errno.h>
 #include<stdio.h>
-//枚举
-//枚举---列举
-//把可取的值---列举
-//enum  枚举关键字
-//enum Sex//星期
-//{
-//	//枚举的可能取值--常量
-//	MALE=2,
-//	FEMALE=4,
-//    SECRET=8
-//};
-////枚举的取值后不能赋值其他值
-////初始值可以掌控
-//
-//enum Color
-//{
-//	RED,//0
-//	GREEN,//1
-//	BLUE//2
-//};
-//
-////c语言的源代码--预编译--->编译--->链接--->可执行程序
-//
-////define 定义的不便于调试没有具体类型
-////枚举定义标识符有类型检查，更加严谨
-////增加代码的可读性和可维护性
-////防止命名污染
-////使用方便，一次可以定义多个常量
-//#define RED 0
-//#define GREEN 1
-//#define BLUE 2
 //int main()
 //{
+//	//向内存申请10个整形空间
+//    int *p=(int *)malloc(10 * sizeof(int));
+//	if (p == NULL)
+//	{
+//		printf("%s\n", strerror(errno));//打印错误信息方式
 //
-//	//枚举赋值  两边类型要一样
-//	//const int num = 100;
-//	//enum Sex s=MALE;
-//	//enum COlor c = BLUE;
-//	//s = FEMALE;
-//	//printf("%d %d %d\n",RED, GREEN, BLUE);//打印依次向下递增数字
-//	//printf("%d %d %d\n", MALE, FEMALE, SECRET);
+//	}
+//	else
+//	{
+//		//正常使用空间
+//		int i = 0;
+//		for (i = 0; i < 10; i++)
+//		{
+//			*(p + 1) = i;
+//		}
+//		for (i = 0; i < 10; i++)
+//		{
+//			printf("%d", *(p + i));
+//		}
+//	}
+//
+//	//当动态申请的空间不再使用的时候
+//	//就应该还给操作系统
+//	free(p);//free释放了空间p，其实是p依然有能力找到p这块地址
+//	p = NULL;
 //	return 0;
+//	//当程序生命周期到了空间会自动还给操作系统
 //}
-//联合--联合体-共用体
-//联合也是一种特殊的自定义类型这种类型定义的变量也
-//包含一系列的成员，特征是这些成员公用同一块空间
-//union Un    //union  联合关键字
-//{
-//	char c;
-//	int i;
-//	//联合体变量大小  至少是最大变量大小
-//};
-//
-//
+//如果参数ptr指向的空间不是动态开辟的，那么free函数的行为是为定义的。
+//如果参数ptr是NULL指针，则函数什么事都不做
+
+
+//callo 开辟一个数组元素初始化为 0
+
 //int main()
 //{
-//	union Un u;
-//	printf("%d\n", sizeof(u));
-//	printf("%p\n", &u);
-//	printf("%p\n", &(u.c));
-//	printf("%p\n", &(u.i));
+//	//malloc(10*sizeof(int))
+//	int *p=(int*)calloc(10, sizeof(int));
+//	if (p == NULL)
+//	{
+//		printf("%s", strerror(errno));
+//	}
+//	else
+//	{
+//		int i = 0;
+//		for (i = 0; i < 10; i++)
+//		{
+//			printf("%d", *(p + i));
+//		}
+//	}
+//	//释放空间
+//	//free函数释放释放动态开辟空间
+//	free(p);
+//	p = NULL;
 //	return 0;
 //}
-//联合体的计算
-//1.联合的大小至少是最大成员的大小
-//2.当最大成员大小不是最大对齐数的整数倍的时候，
-//就要对齐到最大对齐数的整数倍
+//
 
 
-//大端  小端
-int check_sys()
-{
-	union Un
-	{
-		char c;
-		int i;
-	}u;
-	u.i = 1;//
-	return u.c;
-	//int a = 1;
-    //返回1表示小端
-	////返回0表示大端
-	//return *(char*)&a;
-
-}
+//realloc  调整动态内存空间大小
 int main()
 {
-	int a = 1;
-	int ret = check_sys();
-	if (1 == *(char*)&a)
+	int*p=(int*)malloc(20);
+	if (p == NULL)
 	{
-		printf("小端\n");
+		printf("%s\n", strerror(errno));
 	}
+		
 	else
 	{
-		printf("大端\n");
+		int i = 0;
+		for (i = 0; i < 5; i++)
+		{
+			*(p + i) = i;
+		}
 	}
-	//取出a的地址，然后强制类型转换位char*，
-	// 解引用后可以看出第一个字节值 可以判断大小端
-	//int a = 0x11223344;
-	//把数据放在内存中的顺序
-   //低地址------------------->高地址
-	//...[][][][][11][22][33][44][][][][][][]...大端字节序存储模式
-	//...[][][][][44][33][22][11][][][][][][]...小端字节序存储模式
-	//讨论一个数，放在内存中的存放的字节顺序
-	//大小端字节序问题
-	//
-
-
-	return 0;
+	//就是在使用malloc开辟的20个字节空间
+	//假设这里，20字节不能满足我们的使用
+	//希望我们能有40个字节的空间
+	//这里就可以使用realloc来调整动态空间
+	int*p2=realloc(p, 40);
+	int i = 0;
+	for (i = 0; i < 10; i++)
+	{
+		printf("%d", *(p2 + i));
+	}
+	return 0; 
+			
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
