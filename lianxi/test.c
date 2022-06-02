@@ -1,142 +1,156 @@
 #define _CRT_SECURE_NO_WARNINGS 1
-//当前我们知道的内存的使用方法：
-//1.创建一个变量
-//栈区：局部变量  函数的形式参数
-//堆区：动态内存分配
-//静态区：全局变量 静态变量
-//struct S
-//{
-//	char name[20];
-//	int age;
-//};
-//int main()
-//{
-//	struct S arr[50];//50个struct S 类型的数据
-//	//30人-浪费
-//	//60-不够
-//	return 0;
-//}
-//C语言是可以创建变长数组-c99中增加
-//动态内存分配在堆上
-//malloc free calloc realloc
-//malloc 开辟内存块
-#include<stdlib.h>
-#include<string.h>
-#include<errno.h>
 #include<stdio.h>
+#include<stdlib.h>
+#include<windows.h>
+//错误案例
+// 
+// 
+// 
 //int main()
 //{
-//	//向内存申请10个整形空间
-//    int *p=(int *)malloc(10 * sizeof(int));
-//	if (p == NULL)
+//	/*int* p = (int*)malloc(40);
+//	if (p = NULL)
 //	{
-//		printf("%s\n", strerror(errno));//打印错误信息方式
+//		return 0;
 //
 //	}
-//	else
+//	int* p2 = realloc(p, 80);
+//	if (p2 != NULL)
 //	{
-//		//正常使用空间
-//		int i = 0;
-//		for (i = 0; i < 10; i++)
-//		{
-//			*(p + 1) = i;
-//		}
-//		for (i = 0; i < 10; i++)
-//		{
-//			printf("%d", *(p + i));
-//		}
-//	}
-//
-//	//当动态申请的空间不再使用的时候
-//	//就应该还给操作系统
-//	free(p);//free释放了空间p，其实是p依然有能力找到p这块地址
-//	p = NULL;
+//		p = p2;
+//	}*/
+//	int* p = realloc(NULL, 40);//malloc
+//	
+//	
+//	
 //	return 0;
-//	//当程序生命周期到了空间会自动还给操作系统
 //}
-//如果参数ptr指向的空间不是动态开辟的，那么free函数的行为是为定义的。
-//如果参数ptr是NULL指针，则函数什么事都不做
-
-
-//callo 开辟一个数组元素初始化为 0
-
 //int main()
 //{
-//	//malloc(10*sizeof(int))
-//	int *p=(int*)calloc(10, sizeof(int));
-//	if (p == NULL)
-//	{
-//		printf("%s", strerror(errno));
-//	}
-//	else
-//	{
-//		int i = 0;
-//		for (i = 0; i < 10; i++)
-//		{
-//			printf("%d", *(p + i));
-//		}
-//	}
-//	//释放空间
-//	//free函数释放释放动态开辟空间
-//	free(p);
-//	p = NULL;
+	////1.对NULL指针解引用
+	//int* p = malloc(40);
+	////p进行相关的判断
+	//*p = 10;//malloc开辟空间失败有可能对NULL指针解引用
+	////对动态开辟内存的越界访问
+	//int* p = (int*)malloc(40);
+	//if (p == NULL)
+	//{
+	//	return 0;
+	//}
+	//int i = 0;
+	////越界
+	//for (i = 0; i <= 10; i++)
+	//{
+	//	*(p + i) = i;//越界访问
+	//}
+	//free(p);
+	//p = NULL;
+	//4. 使用free释放动态开辟内存的一部分
+	//int* p = (int*)malloc;
+	//if(p == NULL)
+	//{
+	//	return 0;
+	//}
+	//int i = 0;
+	//for (i = 0; i < 10; i++)
+	//{
+	//	*p++ = i;
+	//}
+	////回收空间
+	////4. 使用free释放动态开辟内存的一部分 
+	//free(p);//p如果变化释放的只是当前位置空间，p不变释放的是刚开始开辟的空间
+	//p = NULL;
+	//return 0;
+	
+	
+	//5.对同一块块动态内存的多次释放
+
+	//int* p = (int*)malloc(40);
+	//if (p == NULL)
+	//{
+	//	return 0;
+	//}
+	////使用
+	////释放
+	//free(p);
+	//p = NULL;//p置为空指针对下面再次释放，下面无效
+	//free(p);
+	////谁申请谁释放
+
+
+
+	//6.对动态开辟内存忘记释放（内存泄露）
+	/*while (1)
+	{
+		malloc(1);
+	}
+
+	return 0;*/
+    
+
+//}
+//void GetMemory(char* p)
+//{
+//	p = (char*)malloc(100);
+//}
+//void Test(void)
+//{
+//	char* str = NULL;//str中放了一个空指针
+//	GetMemory(str);//调用完之后GetMemory中依旧方的是空指针
+//	strcpy(str, "hello world");//程序奔溃
+//	printf(str);
+//	//运行代码程序会出现奔溃的现象
+//	//程序存在内存泄露问题
+//	//str以值传递的形式给p
+//	//p是GetMemory函数返回之后，动态开辟内存尚未释放
+//	//并且无法找到，所以会造成内存泄露
+//}
+//int main()
+//{
+//	Test();
+//	/*char* str = "abcdef";
+//	printf("%s\n", str); */
 //	return 0;
 //}
-//
 
-
-//realloc  调整动态内存空间大小
+//改正一
+//void GetMemory(char* *p)
+//{
+//	*p = (char*)malloc(100);//把开辟好的地址放在*p中
+// }
+//void Test(void)
+//{
+//	char* str = NULL;
+//	GetMemory(&str);
+//	strcpy(str, "hello world");
+//	printf(str);
+//	free(str);
+//	str = NULL;
+//}
+//int main()
+//{
+//	Test();
+//	return 0;
+//}
+char* GetMemory(char* p)
+{
+	p = (char*)malloc(100);
+	return p;
+}
+void Test(void)
+{
+	char* str = NULL;
+	str=GetMemory(str);
+	strcpy(str, "hello world");
+	printf(str);
+	free(str);
+	str = NULL;
+}
 int main()
 {
-	int*p=(int*)malloc(20);
-	if (p == NULL)
-	{
-		printf("%s\n", strerror(errno));
-	}
-		
-	else
-	{
-		int i = 0;
-		for (i = 0; i < 5; i++)
-		{
-			*(p + i) = i;
-		}
-	}
-	//就是在使用malloc开辟的20个字节空间
-	//假设这里，20字节不能满足我们的使用
-	//希望我们能有40个字节的空间
-	//这里就可以使用realloc来调整动态空间
-	int*p2=realloc(p, 40);
-	int i = 0;
-	for (i = 0; i < 10; i++)
-	{
-		printf("%d", *(p2 + i));
-	}
-	return 0; 
-			
+	Test();
+	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
